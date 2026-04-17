@@ -184,16 +184,25 @@ as `Ca2data.csv`. An internet connection is required the first time only.
 
 ## Citation
 
-If you use this code, please cite:
+If you use this code, please cite both the paper and the software:
 
 ```bibtex
-@article{strang_splitting_pearson,
+@article{pilipovic2026strang,
   title   = {Strang splitting estimator for nonlinear multivariate stochastic
              differential equations with Pearson-type multiplicative noise},
-  author={Pilipović, Predrag and Samson, Adeline and Ditlevsen, Susanne},
+  author  = {Pilipović, Predrag and Samson, Adeline and Ditlevsen, Susanne},
   journal = {},
   year    = {2026},
   doi     = {}
+}
+
+@software{pilipovic2026code,
+  author    = {Pilipović, Predrag},
+  title     = {Supplementary code: Strang splitting estimator for nonlinear
+               multivariate SDEs with Pearson-type multiplicative noise},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.19632952}
 }
 ```
 

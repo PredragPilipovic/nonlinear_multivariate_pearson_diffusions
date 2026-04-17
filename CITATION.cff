@@ -1,7 +1,8 @@
-cff-version: 1.2.0
+cff-version: 1.0.0
 message: "If you use this software, please cite both the paper and the software itself."
 type: software
 title: "Supplementary code: Strang splitting estimator for nonlinear multivariate SDEs with Pearson-type multiplicative noise"
+doi: "10.5281/zenodo.19632952"
 abstract: >
   Supplementary code repository that generates all simulation results, real-data
   application results, and figures for the paper "Strang splitting estimator for
@@ -25,6 +26,5 @@ preferred-citation:
       given-names: "Adeline"
     - family-names: "Ditlevsen"
       given-names: "Susanne"
-  journal: ""
-  year: "2026"
-  doi: ""
+
+
