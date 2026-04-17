@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the paper and the software itself."
+type: software
+title: "Supplementary code: Strang splitting estimator for nonlinear multivariate SDEs with Pearson-type multiplicative noise"
+abstract: >
+  Supplementary code repository that generates all simulation results, real-data
+  application results, and figures for the paper "Strang splitting estimator for
+  nonlinear multivariate stochastic differential equations with Pearson-type
+  multiplicative noise". Includes Monte Carlo simulation studies for the
+  Student-Kramers oscillator and Wright-Fisher diffusion, and a real-data
+  application to the Greenland ice-core Ca2+ record.
+authors:
+  - family-names: "Pilipović"
+    given-names: "Predrag"
+    orcid: "0000-0002-8890-421X"
+repository-code: "https://github.com/PredragPilipovic/nonlinear_multivariate_pearson_diffusions"
+license: MIT
+preferred-citation:
+  type: article
+  title: "Strang splitting estimator for nonlinear multivariate stochastic differential equations with Pearson-type multiplicative noise"
+  authors:
+    - family-names: "Pilipović"
+      given-names: "Predrag"
+    - family-names: "Samson"
+      given-names: "Adeline"
+    - family-names: "Ditlevsen"
+      given-names: "Susanne"
+  journal: ""
+  year: "2026"
+  doi: ""

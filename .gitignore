@@ -1,0 +1,27 @@
+# Generated simulation outputs
+results/
+
+# All images
+*.png
+
+# Data files
+*.csv
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# JAX/XLA compilation cache
+.jax_cache/
+
+# Editor and OS clutter
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Virtual environments
+.venv/
+venv/
+env/

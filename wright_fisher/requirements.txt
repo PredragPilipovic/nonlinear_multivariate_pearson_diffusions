@@ -1,0 +1,9 @@
+jax>=0.4.25
+jaxlib>=0.4.25
+optax>=0.2.2
+numpy>=1.26
+scipy>=1.13
+pandas>=2.2
+matplotlib>=3.9
+seaborn>=0.13
+tqdm>=4.66
