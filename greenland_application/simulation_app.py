@@ -45,24 +45,88 @@ def compute_kde_bands(sim_long: np.ndarray, n_obs: int, n_rep: int,
 def calculate_waiting_times(X: np.ndarray, k: int = 11, level: float = 0.6,
                              h: float = H_OBS):
     """
-    Stadial and interstadial waiting times via median-filter threshold crossings.
-    Returns stadial_wt, interstadial_wt (in ka), and the smoothed trajectory.
+    Stadial and interstadial waiting times via median-filter threshold crossings,
+
+    Returns
+    -------
+    stadial_wt       : np.ndarray  – stadial waiting times in ka
+    interstadial_wt  : np.ndarray  – interstadial waiting times in ka
+    smoothX          : np.ndarray  – median-filtered trajectory
+    upper_up         : np.ndarray  – indices of upward crossings of +level
+    upper_down       : np.ndarray  – indices of downward crossings of +level
+    lower_up         : np.ndarray  – indices of upward crossings of -level
+    lower_down       : np.ndarray  – indices of downward crossings of -level
     """
-    smoothX    = medfilt(X, kernel_size=k)
-    shift_u    = np.diff(np.sign(smoothX - level)) / 2.0
-    shift_l    = np.diff(np.sign(smoothX + level)) / 2.0
-    upper_up   = np.where(shift_u ==  1)[0]
-    upper_down = np.where(shift_u == -1)[0]
-    lower_up   = np.where(shift_l ==  1)[0]
-    lower_down = np.where(shift_l == -1)[0]
+    smoothX = medfilt(X, kernel_size=k)
 
-    def _intervals(starts, ends):
-        if not len(starts) or not len(ends): return np.array([])
-        if starts[0] > ends[0]:             ends   = ends[1:]
-        if len(starts) > len(ends):         starts = starts[:len(ends)]
-        elif len(ends) > len(starts):       ends   = ends[:len(starts)]
-        return (ends - starts) * h
+    shift_upp = np.diff(np.sign(smoothX - level)) / 2.0
+    shift_low = np.diff(np.sign(smoothX + level)) / 2.0
 
-    return (_intervals(lower_down, lower_up),
-            _intervals(upper_up, upper_down),
-            smoothX)
+    # Remove downward crossings of -level that have no intervening ±level crossing
+    tmp_low = shift_low.copy()
+    prev_point = 0
+    for i in np.where(shift_low == -1)[0]:
+        if np.sum(np.abs(shift_upp[prev_point:i])) == 0:
+            tmp_low[i] = 0
+        prev_point = i  # unconditional, mirrors R's prev.point <- i
+
+    # Backwards alternation enforcer: remove consecutive same-sign crossings
+    one_indicator, one_flag = 0, False
+    for i in np.where(tmp_low != 0)[0][::-1]:
+        if one_indicator + tmp_low[i] != 2:
+            one_flag = False
+        if one_indicator + tmp_low[i] == 2:
+            tmp_low[i] = 0
+            one_flag = True
+        if not one_flag:
+            one_indicator = tmp_low[i]
+
+    lower_up   = np.where(tmp_low ==  1)[0]
+    lower_down = np.where(tmp_low == -1)[0]
+
+    # Pair down→up crossings of -level to form stadial intervals
+    if len(lower_up) and len(lower_down):
+        if lower_up[0] > lower_down[0]:
+            n = min(len(lower_up), len(lower_down))
+            stadial_wt = (lower_up[:n] - lower_down[:n]) * h
+        else:
+            n = min(len(lower_up) - 1, len(lower_down))
+            stadial_wt = (lower_up[1:n + 1] - lower_down[:n]) * h
+    else:
+        stadial_wt = np.array([])
+
+    # Remove upward crossings of +level that have no intervening ±level crossing
+    tmp_upp = shift_upp.copy()
+    prev_point = 0
+    for i in np.where(shift_upp == 1)[0]:
+        if np.sum(np.abs(shift_low[prev_point:i])) == 0:
+            tmp_upp[i] = 0
+        prev_point = i  # unconditional
+
+    # Backwards alternation enforcer
+    one_indicator, one_flag = 0, False
+    for i in np.where(tmp_upp != 0)[0][::-1]:
+        if one_indicator + tmp_upp[i] != -2:
+            one_flag = False
+        if one_indicator + tmp_upp[i] == -2:
+            tmp_upp[i] = 0
+            one_flag = True
+        if not one_flag:
+            one_indicator = tmp_upp[i]
+
+    upper_up   = np.where(tmp_upp ==  1)[0]
+    upper_down = np.where(tmp_upp == -1)[0]
+
+    # Pair up→down crossings of +level to form interstadial intervals
+    if len(upper_up) and len(upper_down):
+        if upper_up[0] < upper_down[0]:
+            n = min(len(upper_up), len(upper_down))
+            interstadial_wt = (upper_down[:n] - upper_up[:n]) * h
+        else:
+            n = min(len(upper_up), len(upper_down) - 1)
+            interstadial_wt = (upper_down[1:n + 1] - upper_up[:n]) * h
+    else:
+        interstadial_wt = np.array([])
+
+    return (stadial_wt, interstadial_wt, smoothX,
+            upper_up, upper_down, lower_up, lower_down)

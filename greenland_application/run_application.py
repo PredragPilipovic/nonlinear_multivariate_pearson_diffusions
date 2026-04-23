@@ -86,11 +86,11 @@ def main():
         sim_X=sim_middle[(l*n_obs):(l*n_obs + len(X_np)), 0],
         sim_V=sim_middle[(l*n_obs):(l*n_obs + len(X_np)), 1],
         save_path=f"{cfg.RESULTS_DIR}/ca2_fit.png")
-
+      
     k, lvl = cfg.K, cfg.LVL
-    stad_d, inter_d, _ = calculate_waiting_times(X_np,             k=k, level=lvl)
-    stad_m, inter_m, _ = calculate_waiting_times(sim_middle[:, 0], k=k, level=lvl)
-    stad_s, inter_s, _ = calculate_waiting_times(sim_small[:, 0],  k=k, level=lvl)
+    stad_d, inter_d, _, *_ = calculate_waiting_times(X_np,             k=k, level=lvl)
+    stad_m, inter_m, _, *_ = calculate_waiting_times(sim_middle[:, 0], k=k, level=lvl)
+    stad_s, inter_s, _, *_ = calculate_waiting_times(sim_small[:, 0],  k=k, level=lvl)
 
     print("\n=== Mean Occupancy Times (years) ===")
     print(f"  Data   — Stadial: {np.mean(stad_d)*1000:.0f}  "
